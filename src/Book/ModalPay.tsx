@@ -1,5 +1,5 @@
 import * as React from "react";
-import classname from "classnames";
+import Modal from './Modal'
 interface IModalPay {
 	show: boolean;
 	center?: boolean;
@@ -28,17 +28,8 @@ const ModalPay: React.FC<IModalPay> = (props) => {
 	
 	return (
 		<>
-			<div
-				className={classname("modal", {
-					"modal-dialog-centered": props.center,
-				})}
-				style={{
-					display: props.show ? "block" : "none",
-					background: `rgba(0,0,0,0.4)`,
-				}}>
-				<div
-					className={classname("modal-dialog animated fadeInDown modal-lg ")}>
-					<div className="modal-content p-5">
+		<Modal show = {props.show} size = {'modal-lg'}>
+		<div className="modal-content p-5">
 						{!props.success ? (
 							<>
 								<h3>Money</h3>
@@ -101,8 +92,7 @@ const ModalPay: React.FC<IModalPay> = (props) => {
 							</>
 						)}
 					</div>
-				</div>
-			</div>
+		</Modal>
 		</>
 	);
 };

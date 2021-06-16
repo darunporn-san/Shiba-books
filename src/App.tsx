@@ -1,31 +1,34 @@
 import React from 'react';
+import { useState,useEffect,useMemo } from 'react';
 import './App.css';
-import * as axios from 'axios'
 import data from './data.json'
 import CardBook from './Book/CardBook';
 import classnames from 'classnames'
 import Sidebar from './Book/Sidebar';
 import _ from "lodash";
 import ModalPay from "./Book/ModalPay";
+import Modal from './Book/Modal'
+const discountDetails:any = {2:10,3:11,4:12,5:13,6:14,7:15}	
 
 function App() {
-	const [books, setBooks]: any[] = React.useState([]);
-	const [discountP, setdiscountP] = React.useState(0);
-	const [allBook, setAllBooks] = React.useState([]);
-	const [toggle, setToggle] = React.useState(false);
-	const [showPay, setShowPay] = React.useState(false);
-	const [price, setPrice] = React.useState(0);
-	const [success, setSuccess] = React.useState(false);
-	const discountDetails:any = {2:10,3:11,4:12,5:13,6:14,7:15}	
+	const [books, setBooks]: any[] = useState([]);
+	const [discountP, setdiscountP] = useState(0);
+	const [allBook, setAllBooks] = useState([]);
+	const [toggle, setToggle] = useState(false);
+	const [deleteId,setDeleteId] = useState('')
+	const [modalDel,setModalDel] = useState(false)
+	const [showPay, setShowPay] = useState(false);
+	const [price, setPrice] = useState(0);
+	const [success, setSuccess] = useState(false);
 	
-	React.useMemo(() => {		
+	useMemo(() => {		
 		if (success) {
 			setBooks([]);
 			setTimeout(() => {
 				setSuccess(false);
 				setToggle(false);;
 				setShowPay(false);
-			}, 3000);
+			}, 1000);
 		}
 		if (!showPay && !toggle) {
 			setBooks([]);
@@ -48,7 +51,7 @@ function App() {
 		let commits = await response.json();
 		setAllBooks(commits.books);
 	};
-	React.useEffect(() => {
+	useEffect(() => {
 		fetchBook();
 	}, []);
 
@@ -59,8 +62,6 @@ function App() {
 			var countPrice = da.reduce(function(acc:any, val:any) { return acc + val; }, 0)
 	
 			if(num > 1){
-				// console.log('countPrice',countPrice);
-				// console.log('findDiscount',discountDetails[num]);
 				dis = dis + (discountDetails[num] / 100 * countPrice)
 			}
 		})
@@ -70,8 +71,7 @@ function App() {
 	}
 	const checkDiscount = (data:any) =>{
 		let getBook:any[] = []
-		let deleteNoHarry = _.filter(data,elm=>elm.id !== '9780241392362')
-
+		let deleteNoHarry = _.filter(data,elm=>elm.id !== '9780241392362')		
 		const maxCount = deleteNoHarry.reduce((pre, cur) => pre = pre > cur.count ? pre : cur.count, 0);
 		if(maxCount>1 && deleteNoHarry.length>1){
 			for(var i=maxCount;i > 0;i--){		
@@ -88,16 +88,26 @@ function App() {
 				getBook.push(objData)
 			}
 			sumDisCount(getBook)	
+		}else{
+			setdiscountP(0)	
+
 		}
 
 	}
- 	const deleteBooks = (e: any) => {
-		const objData = _.filter(books, (elm) => elm.id !== e.id);
+ 	const deleteBooks = () => {
+		const objData = _.filter(books, (elm) => elm.id !== deleteId);
+		if(objData.length === 0){
+			setToggle(false)
+		}
+		checkDiscount(objData)
 		setBooks(objData);
-
-		// setList(objData);
+		setModalDel(false)
 	};
 
+	const modalDelete = (e:any)=>{
+		setModalDel(true)
+		setDeleteId(e.id)
+	}
 	const selectBooks = (e: any) => {
 		const filter2 = _.filter(books, (elm) => elm?.id === e.id);
 		if (filter2.length !== 0 && books.length !== 0) {
@@ -111,19 +121,13 @@ function App() {
 			.map((e, i, final) => final.indexOf(e) === i && i)
 			.filter((e: any) => obj[e])
 			.map((e: any) => obj[e]);
-
+		
 		checkDiscount(unique)
 		setBooks(unique);
 		setToggle(true);
 	};
 
-	// React.useEffect(() => {
-	// 	if (!showPay) {
-	// 		setToggle(false);
-	// 	}
-	// }, [showPay]);
-
-	React.useEffect(() => {
+	useEffect(() => {
 		let count = 0;
 		const price = books.map((data: any) => {
 			count = data.count * +data.price;
@@ -136,32 +140,39 @@ function App() {
 	}, [books]);
 	return (
 		<>
-			<div className={classnames("text-center head py-3", {
-						headerShop: toggle,
-					})}>
+			<div
+				className={classnames("text-center head py-3", {
+					headerShop: toggle,
+				})}>
 				<h1 className="mb-2 mt-4">Shiba Book Store</h1>
-				<div className="displayRow" >
+				<div className="displayRow">
+					<div
+						className={classnames("row mx-0", {
+							toggleSide: toggle,
+						})}>
+					{/* {allBook.map((item: any, key: number) => ( */}
 
-				<div
-					className={classnames("row mx-0", {
-						toggleSide: toggle,
-					})}>
-					{allBook.map((item: any, key: number) => (
-						<CardBook key = {key} book={item} selectBooks={selectBooks} toggle={toggle} />
-					))}
-				</div>
+						{data.books.map((item: any, key: number) => (
+							<CardBook
+								key={key}
+								book={item}
+								selectBooks={selectBooks}
+								toggle={toggle}
+							/>
+						))}
+					</div>
 				</div>
 				<div
 					className={classnames("sidebar pt-5", {
 						closeSlide: !toggle,
 					})}>
-						<h2>Order</h2>
+					<h2>Order</h2>
 					<Sidebar
 						data={books}
 						showPay={showPay}
 						setShowPay={setShowPay}
 						price={price}
-						deleteBooks={deleteBooks}
+						deleteBooks={modalDelete}
 						setToggle={setToggle}
 						discountP={discountP}
 					/>
@@ -175,6 +186,29 @@ function App() {
 					/>
 				</div>
 			</div>
+		    <Modal show = {modalDel} size = {'modal-md'}>
+			<div className="modal-content p-5 text-center">
+
+				<p>Do you want delete this selected book?</p>
+				<div>
+									<button
+										type="button"
+										className="btn btn-secondary"
+										style={{marginRight:'20px'}}
+										onClick={()=>setModalDel(false)}>
+	
+										Cancel
+									</button>
+									<button
+										type="submit"
+										style={{marginLeft:'20px'}}
+										className="btn btn-primary "
+										onClick={deleteBooks}>
+										Confirm
+									</button>
+								</div>
+								</div>
+			</Modal>
 		</>
 	);
 }
