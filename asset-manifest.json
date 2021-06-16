@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/Shiba-books/static/css/main.04fc0fc4.chunk.css",
+    "main.css": "/Shiba-books/static/css/main.7886c248.chunk.css",
     "main.js": "/Shiba-books/static/js/main.2e302323.chunk.js",
     "main.js.map": "/Shiba-books/static/js/main.2e302323.chunk.js.map",
     "runtime-main.js": "/Shiba-books/static/js/runtime-main.004c8bbe.js",
@@ -12,14 +12,14 @@
     "static/js/3.334ce084.chunk.js.map": "/Shiba-books/static/js/3.334ce084.chunk.js.map",
     "index.html": "/Shiba-books/index.html",
     "static/css/2.62cbf21c.chunk.css.map": "/Shiba-books/static/css/2.62cbf21c.chunk.css.map",
-    "static/css/main.04fc0fc4.chunk.css.map": "/Shiba-books/static/css/main.04fc0fc4.chunk.css.map",
+    "static/css/main.7886c248.chunk.css.map": "/Shiba-books/static/css/main.7886c248.chunk.css.map",
     "static/js/2.a4b03c2c.chunk.js.LICENSE.txt": "/Shiba-books/static/js/2.a4b03c2c.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.004c8bbe.js",
     "static/css/2.62cbf21c.chunk.css",
     "static/js/2.a4b03c2c.chunk.js",
-    "static/css/main.04fc0fc4.chunk.css",
+    "static/css/main.7886c248.chunk.css",
     "static/js/main.2e302323.chunk.js"
   ]
 }
