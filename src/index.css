@@ -31,7 +31,7 @@ code {
 
 
 .cardbook{
- /* border: solid 1px black; */
+ border: solid 1px transparent;
  border-bottom-right-radius: 20px;
  border-top-left-radius: 20px;
   background-color: #fff1e6;
